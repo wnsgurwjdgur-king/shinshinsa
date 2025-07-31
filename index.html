@@ -94,6 +94,7 @@
         .department a { background-color: #2563eb; color: white; border-color: #2563eb; }
         .supervisor a { background-color: #3b82f6; color: white; border-color: #3b82f6; }
         .worker a { background-color: #60a5fa; color: white; border-color: #60a5fa; }
+        .safety-manager a { background-color: #059669; color: white; border-color: #059669; } /* 안전관리자 색상 */
         
         .committee-container, .external-stakeholders { cursor: pointer; }
         .committee-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 20px; padding: 20px; background-color: #eef2ff; border-radius: 12px; border: 2px dashed #c7d2fe; }
@@ -137,7 +138,7 @@
 <body class="p-4 sm:p-6 md:p-8">
 
     <div class="max-w-7xl mx-auto">
-        <h1 class="text-3xl font-bold text-center text-slate-800 mb-4">대화형 전체 안전보건 관리 조직도</h1>
+        <h1 class="text-3xl font-bold text-center text-slate-800 mb-4">신신사 안전보건관리조직도</h1>
         <p class="text-center text-slate-600 mb-12">내부 지휘체계와 외부 이해관계자와의 협력 관계를 통합하여 표시합니다. <br><b>각 항목을 클릭하여 상세 정보와 핵심 업무를 확인해보세요!</b></p>
 
         <!-- 내부 조직도 -->
@@ -159,6 +160,9 @@
                                     <li class="department">
                                         <a data-key="기술연구센터장"><i class="fas fa-flask role-icon"></i>기술연구센터장</a>
                                         <ul><li class="supervisor"><a data-key="관리감독자"><i class="fas fa-user-shield role-icon"></i>관리감독자</a><ul><li class="worker"><a data-key="현장 작업자"><i class="fas fa-users role-icon"></i>현장 작업자</a></li></ul></li></ul>
+                                    </li>
+                                    <li class="safety-manager">
+                                        <a data-key="안전관리자"><i class="fas fa-shield-alt role-icon"></i>안전관리자</a>
                                     </li>
                                 </ul>
                             </li>
@@ -218,7 +222,7 @@
     </div>
 
     <script>
-        // 이해관계자 데이터 (상세 업무 및 전체 연락처 추가)
+        // 이해관계자 데이터 (최신 정보로 업데이트)
         const stakeholderData = {
             '대표이사': { name: '최상기', position: '사장', contact: '010-5509-4083', tasks: ['안전보건 경영방침 수립 및 선포', '안전보건 목표 설정 및 성과 검토', '안전보건 예산 승인 및 자원 배분', '중대재해 발생 시 대응 총괄'] },
             '사업부장': { name: '김봉석', position: '전무', contact: '010-2350-9540', tasks: ['사업부 안전보건 활동 총괄', '신규 제품/공정의 안전성 검토', '협력업체 안전보건 관리 감독', '안전보건 관련 투자 계획 수립'] },
@@ -230,6 +234,11 @@
             '품질개발팀장': { tasks: ['신제품 개발 시 안전성 평가 (DFSS)', '고객의 안전 요구사항 파악 및 반영', '품질 문제 발생 시 안전 영향 검토', '안전 관련 품질 기준 수립 및 관리'] },
             '관리감독자': [
                 { name: '김진욱', position: '책임', contact: '010-2274-2100' }, { name: '박요한', position: '책임', contact: '010-9382-0219' }, { name: '정진만', position: '책임', contact: '010-7100-9406' }, { name: '정종로', position: '책임', contact: '010-3834-2035' }, { name: '김민철', position: '책임', contact: '010-4747-1099' }, { name: '윤성만', position: '책임', contact: '010-4119-1192' }, { name: '장양금', position: '사원', contact: '055-337-2475' }, { name: '김경주', position: '사원', contact: '010-8120-2045' }, { name: '김재호', position: '사원', contact: '010-9982-4050' }, { name: '정지환', position: '사원', contact: '010-5586-7142' }, { name: '함윤희', position: '사원', contact: '010-5497-1381' }, { name: '최원웅', position: '사원', contact: '정보 없음' }, { name: '윤은대', position: '사원', contact: '정보 없음' }
+            ],
+            '안전관리자': [
+                { name: '이귀형', position: '팀장', contact: '010-5588-0808' },
+                { name: '이기훈', position: '선임', contact: '010-9178-5191' },
+                { name: '최준혁', position: '주임', contact: '010-4972-6025' }
             ],
             '현장 작업자': { tasks: ['작업 전 안전점검(TBM) 참여 및 의견 제시', '개인보호구 지급 및 올바른 착용', '안전작업허가(PTW) 절차 준수', '정리정돈 및 청결 유지 (5S 활동)', '위험요인 발견 시 즉시 보고 및 작업 중지'] },
             '산업안전보건위원회': { tasks: ['안전보건관리규정 심의 및 개정', '안전보건 교육 계획 심의', '작업환경측정 결과 검토 및 개선 요구', '중대재해 원인조사 및 재발방지대책 심의'] },
@@ -257,7 +266,7 @@
             '나라세이프': { name: '김선길', position: '기사', contact: '010-8385-7119', tasks: ['소방시설 정기 점검 및 결과 보고', '소화기, 감지기 등 노후 설비 교체', '소방계획서 작성 및 훈련 지원', '소방법규 개정사항 안내'] },
             '경남기술안전단': { name: '함도훈', position: '차장', contact: '010-2385-8987', tasks: ['정기/수시 안전점검 및 컨설팅', '위험성 평가 기법 지도', '안전 관련 법규 및 기술자료 제공', '안전관리 수준 향상 방안 제시'] },
             '경남전력안전': { name: '정보 없음', position: '정보 없음', contact: '010-8591-2636', tasks: ['전기설비 정기검사 및 결과 통보', '부적합 설비 개선 방안 제시', '전기재해 예방 기술 지도', '에너지 절약 및 효율 관리 컨설팅'] },
-            '조은금강병원': { name: '오유림', position: '간호사', contact: '010-8782-3660', tasks: ['작업관련성 질환 상담 및 관리', '근골격계 부담작업 유해요인조사 지원', '뇌심혈관질환 예방 프로그램 운영', '직무 스트레스 관리 상담'] },
+            '조은금강병원': { name: '', position: '팀장', contact: '010-4521-6626', tasks: ['작업관련성 질환 상담 및 관리', '근골격계 부담작업 유해요인조사 지원', '뇌심혈관질환 예방 프로그램 운영', '직무 스트레스 관리 상담'] },
             '에덴환경산업': { name: '정옥철', position: '사장', contact: '010-4567-8007', tasks: ['폐기물 종류별 적법 처리', '폐기물 수집/운반 시 안전 조치', '폐기물 관리대장 기록 및 보고', '관련 법규 변경사항 안내'] }
         };
 
@@ -279,7 +288,7 @@
                 modalTitle.textContent = `${key} 상세 정보`;
                 
                 let detailsHtml = '';
-                if (Array.isArray(data)) { // 관리감독자 리스트
+                if (Array.isArray(data)) { // 관리감독자, 안전관리자 리스트
                     detailsHtml += `<h4>담당자 정보</h4><ul>`;
                     data.forEach(person => {
                         detailsHtml += `<li class="supervisor-item">
@@ -290,11 +299,22 @@
                         </li>`;
                     });
                     detailsHtml += `</ul>`;
-                    detailsHtml += `<h4>주요 업무</h4><ul>`;
-                    ['작업 전 안전점검(TBM) 실시 및 감독', '담당 구역 위험성 평가 및 개선 조치 이행', '개인보호구 착용 및 안전수칙 준수 여부 감독', '사고 발생 시 즉각적인 보고 및 초동 조치'].forEach(task => {
-                        detailsHtml += `<li class="task-item">${task}</li>`;
-                    });
-                    detailsHtml += `</ul>`;
+                    
+                    let tasks = [];
+                    if (key === '관리감독자') {
+                        tasks = ['작업 전 안전점검(TBM) 실시 및 감독', '담당 구역 위험성 평가 및 개선 조치 이행', '개인보호구 착용 및 안전수칙 준수 여부 감독', '사고 발생 시 즉각적인 보고 및 초동 조치'];
+                    } else if (key === '안전관리자') {
+                        tasks = ['산업안전보건위원회 및 안전보건관리규정 운영', '안전보건 교육 계획 수립 및 실시', '사업장 순회점검, 지도 및 조치의 건의', '산업재해 발생의 원인 조사, 분석 및 재발 방지 대책 수립'];
+                    }
+
+                    if(tasks.length > 0) {
+                         detailsHtml += `<h4>주요 업무</h4><ul>`;
+                        tasks.forEach(task => {
+                            detailsHtml += `<li class="task-item">${task}</li>`;
+                        });
+                        detailsHtml += `</ul>`;
+                    }
+
                 } else if (data) { // 그 외 모든 항목
                     detailsHtml += `<h4>담당자 정보</h4><ul>`;
                     if (data.name) detailsHtml += `<li><i class="fas fa-user info-icon"></i><span class="info-label">담당자</span> ${data.name}</li>`;
