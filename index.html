@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신신사 안전보건관리조직도</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8fafc;
+        }
+        .tree-container {
+            width: 100%;
+            overflow-x: auto;
+            padding: 20px 0;
+            -webkit-overflow-scrolling: touch; /* iOS 부드러운 스크롤 */
+        }
+        .tree {
+            display: inline-flex; /* 자식 요소만큼 너비가 늘어나도록 설정 */
+            justify-content: center;
+            min-width: 100%; /* 최소 너비를 100%로 설정하여 작은 화면에서도 중앙 정렬 유지 */
+        }
+        .tree ul {
+            padding-top: 20px;
+            position: relative;
+            transition: all 0.5s;
+            display: flex;
+            justify-content: center;
+            white-space: nowrap; /* 자식 요소들이 한 줄로 나열되도록 */
+        }
+        .tree li {
+            display: inline-block; /* 가로 스크롤을 위해 변경 */
+            float: none;
+            text-align: center;
+            list-style-type: none;
+            position: relative;
+            padding: 20px 10px 0 10px;
+            transition: all 0.5s;
+        }
+        /* 연결선 */
+        .tree li::before, .tree li::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 50%;
+            border-top: 2px solid #cbd5e1;
+            width: 50%;
+            height: 20px;
+        }
+        .tree li::after {
+            right: auto;
+            left: 50%;
+            border-left: 2px solid #cbd5e1;
+        }
+        .tree li:only-child::after, .tree li:only-child::before { display: none; }
+        .tree li:only-child { padding-top: 0; }
+        .tree li:first-child::before, .tree li:last-child::after { border: 0 none; }
+        .tree li:last-child::before { border-right: 2px solid #cbd5e1; border-radius: 0 5px 0 0; }
+        .tree li:first-child::after { border-radius: 5px 0 0 0; }
+        .tree ul ul::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            border-left: 2px solid #cbd5e1;
+            width: 0;
+            height: 20px;
+        }
+        .tree li a {
+            border: 1px solid #e2e8f0;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #334155;
+            background-color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-block;
+            border-radius: 8px;
+            transition: all 0.3s;
+            min-width: 170px;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            cursor: pointer;
+        }
+        .tree li a:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+        }
+        .role-icon { margin-right: 8px; }
+        .ceo a { background-color: #1e3a8a; color: white; border-color: #1e3a8a; }
+        .management a { background-color: #1d4ed8; color: white; border-color: #1d4ed8; }
+        .department a { background-color: #2563eb; color: white; border-color: #2563eb; }
+        .supervisor a { background-color: #3b82f6; color: white; border-color: #3b82f6; }
+        .worker a { background-color: #60a5fa; color: white; border-color: #60a5fa; }
+        
+        .committee-container, .external-stakeholders { cursor: pointer; }
+        .committee-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 20px; padding: 20px; background-color: #eef2ff; border-radius: 12px; border: 2px dashed #c7d2fe; }
+        .committee-box { background-color: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); text-align: center; border: 1px solid #e2e8f0; min-width: 220px; transition: all 0.3s; }
+        .committee-box:hover { transform: translateY(-3px); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+        .committee-box h3 { font-weight: 700; color: #4f46e5; margin-bottom: 10px; }
+
+        .external-stakeholders { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+        .stakeholder-card { background-color: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); border-left: 5px solid; transition: all 0.3s ease; }
+        .stakeholder-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1); }
+        .stakeholder-card h3 { font-size: 1.125rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; }
+        .stakeholder-card ul { list-style-type: none; padding-left: 5px; }
+        .stakeholder-card li { padding: 6px 0; color: #475569; font-size: 0.95rem; border-bottom: 1px solid #e5e7eb; transition: background-color 0.2s; }
+        .stakeholder-card li:hover { background-color: #f9fafb; }
+        .stakeholder-card li:last-child { border-bottom: none; }
+        .gov { border-color: #ef4444; } .gov h3 { color: #ef4444; }
+        .client { border-color: #10b981; } .client h3 { color: #10b981; }
+        .supplier { border-color: #f97316; } .supplier h3 { color: #f97316; }
+        .outsource { border-color: #8b5cf6; } .outsource h3 { color: #8b5cf6; }
+        .agency { border-color: #3b82f6; } .agency h3 { color: #3b82f6; }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s ease-in-out; }
+        .modal-container { background: white; padding: 2rem; border-radius: 0.75rem; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; transform: scale(0.95); transition: all 0.3s ease-in-out; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-overlay.active .modal-container { transform: scale(1); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 1rem; }
+        .modal-title { font-size: 1.25rem; font-weight: 700; color: #111827; }
+        .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #9ca3af; transition: color 0.2s; }
+        .modal-close:hover { color: #374151; }
+        #info-details h4 { font-weight: 600; font-size: 1.1rem; margin-top: 1.5rem; margin-bottom: 1rem; color: #1e3a8a; border-left: 3px solid #1e3a8a; padding-left: 0.75rem; }
+        #info-details ul { list-style-type: none; margin: 0; padding: 0; }
+        #info-details li { background-color: #f9fafb; border-radius: 6px; padding: 0.75rem; margin-bottom: 0.5rem; display: flex; align-items: center; }
+        #info-details .info-label { font-weight: 500; color: #6b7280; min-width: 80px; display: inline-block; }
+        #info-details .info-icon { color: #60a5fa; margin-right: 0.75rem; width: 20px; text-align: center; }
+        #info-details .task-item { background-color: transparent; border-left: 2px solid #dbeafe; padding-left: 1rem; margin-bottom: 0.75rem; align-items: flex-start; }
+        #info-details .task-item::before { content: "✓"; color: #3b82f6; margin-right: 0.5rem; font-weight: bold; }
+        #info-details .supervisor-item { border: 1px solid #e5e7eb; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+        #info-details .supervisor-item strong { color: #1f2937; }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl font-bold text-center text-slate-800 mb-4">대화형 전체 안전보건 관리 조직도</h1>
+        <p class="text-center text-slate-600 mb-12">내부 지휘체계와 외부 이해관계자와의 협력 관계를 통합하여 표시합니다. <br><b>각 항목을 클릭하여 상세 정보와 핵심 업무를 확인해보세요!</b></p>
+
+        <!-- 내부 조직도 -->
+        <h2 class="text-2xl font-bold text-center text-slate-800 mb-8">내부 안전보건 지휘체계</h2>
+        <div class="tree-container">
+            <div class="tree">
+                <ul>
+                    <li class="ceo">
+                        <a data-key="대표이사"><i class="fas fa-crown role-icon"></i>대표이사</a>
+                        <ul>
+                            <li class="management"><a data-key="사업부장"><i class="fas fa-user-tie role-icon"></i>사업부장</a></li>
+                            <li class="management">
+                                <a data-key="공장장"><i class="fas fa-hard-hat role-icon"></i>공장장</a>
+                                <ul>
+                                    <li class="department">
+                                        <a data-key="금형실장"><i class="fas fa-cogs role-icon"></i>금형실장</a>
+                                        <ul><li class="supervisor"><a data-key="관리감독자"><i class="fas fa-user-shield role-icon"></i>관리감독자</a><ul><li class="worker"><a data-key="현장 작업자"><i class="fas fa-users role-icon"></i>현장 작업자</a></li></ul></li></ul>
+                                    </li>
+                                    <li class="department">
+                                        <a data-key="기술연구센터장"><i class="fas fa-flask role-icon"></i>기술연구센터장</a>
+                                        <ul><li class="supervisor"><a data-key="관리감독자"><i class="fas fa-user-shield role-icon"></i>관리감독자</a><ul><li class="worker"><a data-key="현장 작업자"><i class="fas fa-users role-icon"></i>현장 작업자</a></li></ul></li></ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="management">
+                                <a data-key="기획실장"><i class="fas fa-chart-line role-icon"></i>기획실장</a>
+                                <ul>
+                                    <li class="department">
+                                        <a data-key="품질개발팀장"><i class="fas fa-check-circle role-icon"></i>품질개발팀장</a>
+                                         <ul><li class="supervisor"><a data-key="관리감독자"><i class="fas fa-user-shield role-icon"></i>관리감독자</a><ul><li class="worker"><a data-key="현장 작업자"><i class="fas fa-users role-icon"></i>현장 작업자</a></li></ul></li></ul>
+                                    </li>
+                                    <li class="department">
+                                        <a data-key="원가실장"><i class="fas fa-dollar-sign role-icon"></i>원가실장</a>
+                                         <ul><li class="supervisor"><a data-key="관리감독자"><i class="fas fa-user-shield role-icon"></i>관리감독자</a><ul><li class="worker"><a data-key="현장 작업자"><i class="fas fa-users role-icon"></i>현장 작업자</a></li></ul></li></ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 주요 협의 기구 -->
+        <div class="mt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-8">주요 내부 협의 기구</h2>
+            <div class="committee-container">
+                <div class="committee-box" data-key="산업안전보건위원회"><h3><i class="fas fa-users-cog"></i> 산업안전보건위원회</h3><p class="text-sm text-slate-600">근로자 의견 제시</p></div>
+                <div class="committee-box" data-key="노사협의회"><h3><i class="fas fa-handshake"></i> 노사협의회</h3><p class="text-sm text-slate-600">전반적인 고충 제시</p></div>
+                <div class="committee-box" data-key="근로자 대표"><h3><i class="fas fa-user-edit"></i> 근로자 대표</h3><p class="text-sm text-slate-600">근로자 의견 수렴 및 대변</p></div>
+            </div>
+        </div>
+
+        <!-- 외부 이해관계자 -->
+        <div class="mt-16">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-8">주요 외부 이해관계자 및 협력 기관</h2>
+            <div class="external-stakeholders">
+                <div class="stakeholder-card gov" data-key="정부 및 규제 기관"><h3><i class="fas fa-building-columns role-icon"></i>정부 및 규제 기관</h3><ul><li data-key="고용노동부 김해지청">고용노동부 김해지청</li><li data-key="안전보건공단">안전보건공단</li><li data-key="낙동강유역환경청">낙동강유역환경청</li><li data-key="김해시청 시민안전과">김해시청 시민안전과</li><li data-key="김해서부경찰서">김해서부경찰서</li><li data-key="주촌파출소">주촌파출소</li><li data-key="주촌 119 안전센터">주촌 119 안전센터</li></ul></div>
+                <div class="stakeholder-card client" data-key="LG 전자"><h3><i class="fas fa-handshake role-icon"></i>고객사</h3><ul><li data-key="LG 전자">LG 전자</li></ul></div>
+                <div class="stakeholder-card supplier" data-key="자재/용품 공급"><h3><i class="fas fa-truck role-icon"></i>자재/용품 공급</h3><ul><li data-key="한성산업">한성산업</li><li data-key="금아스틸(주)">금아스틸(주)</li><li data-key="주식회사 알앤티">주식회사 알앤티</li><li data-key="에이치앤제이테크">에이치앤제이테크</li><li data-key="(주)유진">(주)유진</li><li data-key="주식회사 명성테크윈">주식회사 명성테크윈</li><li data-key="부성폴리콤">부성폴리콤</li><li data-key="성우상사">성우상사</li></ul></div>
+                <div class="stakeholder-card outsource" data-key="시설/외주 업체"><h3><i class="fas fa-tools role-icon"></i>시설/외주 업체</h3><ul><li data-key="GM건업">GM건업</li><li data-key="미건통상">미건통상</li><li data-key="굿모닝전력">굿모닝전력</li></ul></div>
+                <div class="stakeholder-card agency" data-key="전문 대행업체"><h3><i class="fas fa-briefcase role-icon"></i>전문 대행업체</h3><ul><li data-key="나라세이프">나라세이프</li><li data-key="경남기술안전단">경남기술안전단</li><li data-key="경남전력안전">경남전력안전</li><li data-key="조은금강병원">조은금강병원</li><li data-key="에덴환경산업">에덴환경산업</li></ul></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="info-modal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 id="modal-title" class="modal-title">상세 정보</h2>
+                <button id="modal-close-btn" class="modal-close">&times;</button>
+            </div>
+            <div id="modal-content">
+                <div id="info-details"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 이해관계자 데이터 (상세 업무 및 전체 연락처 추가)
+        const stakeholderData = {
+            '대표이사': { name: '최상기', position: '사장', contact: '010-5509-4083', tasks: ['안전보건 경영방침 수립 및 선포', '안전보건 목표 설정 및 성과 검토', '안전보건 예산 승인 및 자원 배분', '중대재해 발생 시 대응 총괄'] },
+            '사업부장': { name: '김봉석', position: '전무', contact: '010-2350-9540', tasks: ['사업부 안전보건 활동 총괄', '신규 제품/공정의 안전성 검토', '협력업체 안전보건 관리 감독', '안전보건 관련 투자 계획 수립'] },
+            '공장장': { name: '박재성', position: '이사', contact: '010-3871-4932', tasks: ['공장 내 안전보건 관리 총괄 책임', '산업안전보건위원회 위원장 직무 수행', '위험성 평가 실시 및 개선 대책 승인', '비상사태 대응 훈련 계획 및 실시 감독'] },
+            '기획실장': { name: '김종일', position: '이사', contact: '010-2232-2128', tasks: ['전사 안전보건 경영 목표 수립 지원', '안전보건 성과 지표 관리 및 분석', '안전보건 관련 법규 및 규제 동향 파악', '안전문화 증진 활동 기획 및 지원'] },
+            '기술연구센터장': { name: '한영문', position: '전무', contact: '010-3554-0193', tasks: ['연구개발 활동의 안전 확보', '신규 설비/물질 도입 시 위험성 검토', '연구실 안전 환경 점검 및 개선', 'LOTO(Lock-Out/Tag-Out) 절차 수립 및 관리'] },
+            '금형실장': { name: '김윤동', position: '책임', contact: '010-5660-0015', tasks: ['금형 작업 관련 안전 절차 수립 및 교육', '프레스, 크레인 등 위험기계 안전 점검', '금형 보관 및 운반 시 안전 조치', '유해위험물질(MSDS) 관리 및 교육'] },
+            '원가실장': { name: '김동규', position: '책임', contact: '010-6667-5433', tasks: ['원가 절감 활동 시 안전성 검토', '안전 관련 비용의 적정성 분석', '구매 요청 시 안전 사양 검토', '안전 투자 대비 효과 분석'] },
+            '품질개발팀장': { tasks: ['신제품 개발 시 안전성 평가 (DFSS)', '고객의 안전 요구사항 파악 및 반영', '품질 문제 발생 시 안전 영향 검토', '안전 관련 품질 기준 수립 및 관리'] },
+            '관리감독자': [
+                { name: '김진욱', position: '책임', contact: '010-2274-2100' }, { name: '박요한', position: '책임', contact: '010-9382-0219' }, { name: '정진만', position: '책임', contact: '010-7100-9406' }, { name: '정종로', position: '책임', contact: '010-3834-2035' }, { name: '김민철', position: '책임', contact: '010-4747-1099' }, { name: '윤성만', position: '책임', contact: '010-4119-1192' }, { name: '장양금', position: '사원', contact: '055-337-2475' }, { name: '김경주', position: '사원', contact: '010-8120-2045' }, { name: '김재호', position: '사원', contact: '010-9982-4050' }, { name: '정지환', position: '사원', contact: '010-5586-7142' }, { name: '함윤희', position: '사원', contact: '010-5497-1381' }, { name: '최원웅', position: '사원', contact: '정보 없음' }, { name: '윤은대', position: '사원', contact: '정보 없음' }
+            ],
+            '현장 작업자': { tasks: ['작업 전 안전점검(TBM) 참여 및 의견 제시', '개인보호구 지급 및 올바른 착용', '안전작업허가(PTW) 절차 준수', '정리정돈 및 청결 유지 (5S 활동)', '위험요인 발견 시 즉시 보고 및 작업 중지'] },
+            '산업안전보건위원회': { tasks: ['안전보건관리규정 심의 및 개정', '안전보건 교육 계획 심의', '작업환경측정 결과 검토 및 개선 요구', '중대재해 원인조사 및 재발방지대책 심의'] },
+            '노사협의회': { tasks: ['근로자 건강증진 활동 협의', '작업환경 개선에 관한 사항 협의', '안전보건 관련 근로자 고충 처리', '산업재해 예방 활동 관련 협의'] },
+            '근로자 대표': { tasks: ['위험성 평가 시 근로자 대표로 참여', '안전보건 개선계획 수립 시 의견 제시', '물질안전보건자료(MSDS) 게시 및 교육 요구', '안전보건 관련 정보 공개 요구'] },
+            '고용노동부 김해지청': { contact: '055-330-6200', tasks: ['산업안전보건 감독 및 시정조치', '중대재해 발생 시 조사 및 처분', '안전보건 관련 법규 질의회신', '안전보건관리체계 구축 지도'] },
+            '안전보건공단': { contact: '055-260-0100', tasks: ['위험성평가 컨설팅 및 기술 지원', '안전보건 교육자료 개발 및 보급', '클린사업장 조성 지원', '안전인증(KCs) 및 안전검사 수행'] },
+            '낙동강유역환경청': { contact: '051-310-6000', tasks: ['화학물질관리법(화관법) 이행 감독', '유해화학물질 취급시설 정기검사', '대기/수질 오염물질 배출 관리 감독', '환경영향평가 협의 및 이행 관리'] },
+            '김해시청 시민안전과': { name: '담당관', contact: '055-225-2841', tasks: ['지역 재난대응계획 수립 및 훈련 지원', '풍수해, 지진 등 자연재난 대비 정보 제공', '시민 대상 안전문화 캠페인 전개', '재난 발생 시 주민 대피 및 통제 지원'] },
+            '김해서부경찰서': { contact: '055-340-9200', tasks: ['사업장 내 형사사건 발생 시 출동 및 수사', '교통사고 처리 및 예방 활동', '외부인 무단 침입 등 보안사고 대응', '테러 및 중요범죄 예방 활동'] },
+            '주촌파출소': { contact: '055-344-0112', tasks: ['사업장 주변 순찰 및 방범 활동', '긴급상황 발생 시 초동 조치', '교통 질서 유지 및 계도', '지역 주민 민원 처리'] },
+            '주촌 119 안전센터': { contact: '055-344-9391', tasks: ['화재 발생 시 진압 및 인명 구조', '응급환자 발생 시 구급 활동', '소방시설 점검 및 작동상태 확인', '소방 훈련 지도 및 지원'] },
+            'LG 전자': { tasks: ['협력사 안전보건 수준 평가 (ESG)', '안전보건 관련 법규 준수 요구', '공급망 안전 관리 강화 요구', '사고 발생 시 정보 공유 및 공동 대응'] },
+            '한성산업': { name: '이기범', position: '과장', contact: '010-9550-2935', tasks: ['유해인자 없는 자재 공급', '자재 운반/하역 시 안전수칙 준수', '물질안전보건자료(MSDS) 제공', '납품 차량 및 운전자 안전 관리'] },
+            '금아스틸(주)': { name: '어수한', position: '과장', contact: '010-7189-1632', tasks: ['유해인자 없는 자재 공급', '자재 운반/하역 시 안전수칙 준수', '물질안전보건자료(MSDS) 제공', '납품 차량 및 운전자 안전 관리'] },
+            '주식회사 알앤티': { name: '정보 없음', position: '정보 없음', contact: '010-7922-3124', tasks: ['유해인자 없는 자재 공급', '자재 운반/하역 시 안전수칙 준수', '물질안전보건자료(MSDS) 제공', '납품 차량 및 운전자 안전 관리'] },
+            '에이치앤제이테크': { name: '박희민', position: '선임', contact: '010-5572-1190', tasks: ['유해인자 없는 자재 공급', '자재 운반/하역 시 안전수칙 준수', '물질안전보건자료(MSDS) 제공', '납품 차량 및 운전자 안전 관리'] },
+            '(주)유진': { name: '김승희', position: '상무', contact: '010-5433-6454', tasks: ['유해인자 없는 자재 공급', '자재 운반/하역 시 안전수칙 준수', '물질안전보건자료(MSDS) 제공', '납품 차량 및 운전자 안전 관리'] },
+            '주식회사 명성테크윈': { name: '이동형', position: '이사', contact: '010-4948-0007', tasks: ['유해인자 없는 자재 공급', '자재 운반/하역 시 안전수칙 준수', '물질안전보건자료(MSDS) 제공', '납품 차량 및 운전자 안전 관리'] },
+            '부성폴리콤': { name: '이진우', position: '대리', contact: '010-4593-3110', tasks: ['유해인자 없는 자재 공급', '자재 운반/하역 시 안전수칙 준수', '물질안전보건자료(MSDS) 제공', '납품 차량 및 운전자 안전 관리'] },
+            '성우상사': { name: '박경복', position: '사장', contact: '010-8544-7788', tasks: ['안전용품 규격 및 성능 확인', '보호구 관련 최신 정보 제공', '납품 시 안전수칙 준수'] },
+            'GM건업': { name: '도기문', position: '사장', contact: '010-9880-2344', tasks: ['공사 전 안전작업계획서 제출', '작업자 대상 특별안전보건교육 실시', '추락, 낙하 등 위험 방지 조치', '공사 구역 안전 표지판 설치 및 관리'] },
+            '미건통상': { name: '김승근', position: '사장', contact: '010-3840-1096', tasks: ['공사 전 안전작업계획서 제출', '작업자 대상 특별안전보건교육 실시', '추락, 낙하 등 위험 방지 조치', '공사 구역 안전 표지판 설치 및 관리'] },
+            '굿모닝전력': { name: '정광희', position: '사장', contact: '010-4583-4380', tasks: ['전기 공사 전 작업계획서 제출', '활선작업 시 안전 조치 철저', '작업자 전기안전교육 실시', '전기 위험 표지판 설치 및 관리'] },
+            '나라세이프': { name: '김선길', position: '기사', contact: '010-8385-7119', tasks: ['소방시설 정기 점검 및 결과 보고', '소화기, 감지기 등 노후 설비 교체', '소방계획서 작성 및 훈련 지원', '소방법규 개정사항 안내'] },
+            '경남기술안전단': { name: '함도훈', position: '차장', contact: '010-2385-8987', tasks: ['정기/수시 안전점검 및 컨설팅', '위험성 평가 기법 지도', '안전 관련 법규 및 기술자료 제공', '안전관리 수준 향상 방안 제시'] },
+            '경남전력안전': { name: '정보 없음', position: '정보 없음', contact: '010-8591-2636', tasks: ['전기설비 정기검사 및 결과 통보', '부적합 설비 개선 방안 제시', '전기재해 예방 기술 지도', '에너지 절약 및 효율 관리 컨설팅'] },
+            '조은금강병원': { name: '오유림', position: '간호사', contact: '010-8782-3660', tasks: ['작업관련성 질환 상담 및 관리', '근골격계 부담작업 유해요인조사 지원', '뇌심혈관질환 예방 프로그램 운영', '직무 스트레스 관리 상담'] },
+            '에덴환경산업': { name: '정옥철', position: '사장', contact: '010-4567-8007', tasks: ['폐기물 종류별 적법 처리', '폐기물 수집/운반 시 안전 조치', '폐기물 관리대장 기록 및 보고', '관련 법규 변경사항 안내'] }
+        };
+
+        const modal = document.getElementById('info-modal');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+        const clickableItems = document.querySelectorAll('[data-key]');
+        const modalTitle = document.getElementById('modal-title');
+        const infoDetailsDiv = document.getElementById('info-details');
+        
+        // 클릭 이벤트 핸들러
+        clickableItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const key = item.getAttribute('data-key');
+                const data = stakeholderData[key];
+                
+                modalTitle.textContent = `${key} 상세 정보`;
+                
+                let detailsHtml = '';
+                if (Array.isArray(data)) { // 관리감독자 리스트
+                    detailsHtml += `<h4>담당자 정보</h4><ul>`;
+                    data.forEach(person => {
+                        detailsHtml += `<li class="supervisor-item">
+                            <div>
+                                <strong><i class="fas fa-user info-icon"></i> ${person.name} (${person.position})</strong>
+                                <div class="text-sm text-gray-600 mt-2 ml-8"><i class="fas fa-phone-alt"></i> ${person.contact || '정보 없음'}</div>
+                            </div>
+                        </li>`;
+                    });
+                    detailsHtml += `</ul>`;
+                    detailsHtml += `<h4>주요 업무</h4><ul>`;
+                    ['작업 전 안전점검(TBM) 실시 및 감독', '담당 구역 위험성 평가 및 개선 조치 이행', '개인보호구 착용 및 안전수칙 준수 여부 감독', '사고 발생 시 즉각적인 보고 및 초동 조치'].forEach(task => {
+                        detailsHtml += `<li class="task-item">${task}</li>`;
+                    });
+                    detailsHtml += `</ul>`;
+                } else if (data) { // 그 외 모든 항목
+                    detailsHtml += `<h4>담당자 정보</h4><ul>`;
+                    if (data.name) detailsHtml += `<li><i class="fas fa-user info-icon"></i><span class="info-label">담당자</span> ${data.name}</li>`;
+                    if (data.position) detailsHtml += `<li><i class="fas fa-id-badge info-icon"></i><span class="info-label">직위</span> ${data.position}</li>`;
+                    if (data.contact) detailsHtml += `<li><i class="fas fa-phone-alt info-icon"></i><span class="info-label">연락처</span> ${data.contact}</li>`;
+                    detailsHtml += `</ul>`;
+
+                    if(data.tasks && data.tasks.length > 0) {
+                        detailsHtml += `<h4>주요 업무</h4><ul>`;
+                        data.tasks.forEach(task => {
+                            detailsHtml += `<li class="task-item">${task}</li>`;
+                        });
+                        detailsHtml += `</ul>`;
+                    }
+                }
+                
+                infoDetailsDiv.innerHTML = detailsHtml;
+                modal.classList.add('active');
+            });
+        });
+
+        // 모달 닫기
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+        modalCloseBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
